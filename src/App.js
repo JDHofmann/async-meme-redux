@@ -1,25 +1,51 @@
-import logo from './logo.svg';
 import './App.css';
+import { MemeList } from './MemeList';
+import { connect } from 'react-redux'
+import { fetchMemes } from './redux/actions'
+import React from 'react'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component{
+
+  componentDidMount(){
+    this.props.fetchMemes()
+  }
+
+  handleLoading = () => {
+    if(this.props.loading === true){
+      return <h3>Now loading memes...</h3>
+      } else {
+        return <MemeList 
+        memes={this.props.memes}
+      />
+      }
+
+      // this.props.loading ?
+      // :
+      
+    
+  }
+
+  render(){
+    console.log(this.props.loading)
+    return (
+      <div className="App">
+        {this.handleLoading()}
+        {/* <MemeList 
+          memes={this.props.memes}
+        /> */}
+      </div>
+    );
+  }
+
+
+  
 }
 
-export default App;
+const msp = state => {
+  return {
+    memes: state.memes,
+    loading: state.loading
+  }
+}
+
+export default connect(msp, { fetchMemes })(App);
